@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+$(document).ready( function() { 
+            var cur_year=new Date().getFullYear();
+            var obj=document.getElementById("year");         
+            for (var i = 1980; i <= 2008; i++)     {                
+                opt = document.createElement("option");
+                opt.value = i;
+                opt.text=i;
+                obj.appendChild(opt);
+            }
+});
+
+$(document).ready( function() { 
+    var cur_year=new Date().getFullYear();
+    var obj=document.getElementById("month");         
+    for (var i = 1; i <= 12; i++)     {                
+        opt = document.createElement("option");
+        opt.value = i;
+        opt.text=i;
+        obj.appendChild(opt);
+    }
+});
+
+$(document).ready( function() { 
+    var cur_year=new Date().getFullYear();
+    var obj=document.getElementById("day");         
+    for (var i = 1; i <= 31; i++)     {                
+        opt = document.createElement("option");
+        opt.value = i;
+        opt.text=i;
+        obj.appendChild(opt);
+    }
+});
+function chkValidEmail() {      
+    var email = document.getElementsByName('userid')[0].value;
+    console.log(email);
+    var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        if(exptext.test(email)==false){
+        	document.getElementById("result1").innerText = "잘못된 이메일 형식입니다."
+        }else if(email==""){
+        	document.getElementById("result1").innerText = "준비중"
+        }else{
+        	document.getElementById("result1").innerText = ""
+        	console.log("체크")
+            chkEmail();
+        }
+}
+
+
+function passleng(){
+	 var password = document.getElementsByName('passwd1')[0].value;
+	 console.log(password.length)
+	 if(password.length <6 ){
+			document.getElementById("result2").innerText = "비밀번호가 너무 짧습니다."
+	 } else {
+			document.getElementById("result2").innerText = ""
+	 }
+}
+function passConfirm(){
+	 var password1 = document.getElementsByName('passwd1')[0].value;
+	 var password = document.getElementsByName('passwd')[0].value;
+	 if(password == password1){
+			document.getElementById("result3").innerText = "비밀번호가 일치"
+		 } else {
+			document.getElementById("result3").innerText = "비밀번호 불일치"
+		 }
+}
+
+
+function chkEmail(){
+    var chk=false;
+    if(document.getElementsByName('myemail')[0].value != ''){
+        var userEmail = $("#userEmail").val();
+        $.ajax({ 
+               url: "emailChk.or", 
+               type: "POST",
+               data: {"userEmail" : userEmail},
+               dataType:"text",
+               cache: false,
+               success: function(result){
+                   if(result!="0") {
+                       alert("The email is duplicated.");
+                       return;
+                   }else{
+                       submitOn();
+                   }
+               }
+        });
+    }
+}
+
+</script>
+<style type="text/css">
+fieldset.top{
+width: 300px;
+background-color:#a5c7ff;
+font-size:15px;
+}
+fieldset.sub{
+width: 300px;
+font-size:15px;
+}
+
+
+</style>
+</head>
+<body>
+<form action="MemberAddController" method="get">
+
+<fieldset class=top>
+    <legend>회원등록</legend>
+    <p><input type="email" name="userid" id="myemail" placeholder="abc@example.com" onkeyup="chkValidEmail()"/>  <span id="result1">준비중</span></p>
+    <p><input type="password" name="passwd1" placeholder="비밀번호(6자 이상)"  onkeyup="passleng()" /><span id="result2"></span></p>
+  	<p><input type="password" name="passwd" placeholder="비밀번호 확인" onkeyup="passConfirm()" /><span id="result3"></span></p>
+  	<input type="text" name="nickname" id="nickname" placeholder="닉네임" />
+   <p>남<input type="radio" name="gender" value="m"> 여 <input type="radio" name="gender" value="w"></p>
+
+					<select id="year" name="year">
+						<option>년도</option>
+					</select>
+					<select id="month" name="month">
+						<option>월</option>
+					</select>
+					<select id="day" name="day">
+						<option>일</option>
+					</select>
+   </fieldset>
+   <fieldset class=sub>
+	<input type="submit" value="회원가입">
+   </fieldset>
+</form>
+
+</body>
+</html>
